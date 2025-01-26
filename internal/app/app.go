@@ -1,0 +1,40 @@
+package app
+
+import (
+	"fmt"
+	"log/slog"
+
+	v1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/controller/rest/v1"
+
+	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/config"
+	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/services"
+
+	"github.com/evrone/go-clean-template/pkg/httpserver"
+	"github.com/gin-gonic/gin"
+)
+
+type HttpServer struct {
+	s *httpserver.Server
+}
+
+func Run(
+	log *slog.Logger,
+	cfg *config.Config,
+) *HttpServer {
+	// Services
+	authService := services.NewAuthService()
+
+	// HTTP Server
+	handler := gin.New()
+	v1.NewRouter(handler, authService)
+	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
+
+	return &HttpServer{s: httpServer}
+}
+
+func (s *HttpServer) Shutdown() {
+	err := s.s.Shutdown()
+	if err != nil {
+		slog.Error(fmt.Errorf("app - Run - httpServer.Shutdown: %w", err).Error())
+	}
+}

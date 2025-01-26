@@ -1,0 +1,21 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact: {}
+  description: RestAPI for test site
+  title: TestSote
+  version: "1.0"
+paths:
+  /hello:
+    get:
+      description: Hello
+      operationId: Hello
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Hello
+      tags:
+      - hello
+swagger: "2.0"
