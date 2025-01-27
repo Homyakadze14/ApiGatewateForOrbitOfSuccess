@@ -64,6 +64,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/logout": {
+            "post": {
+                "description": "Logout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "operationId": "Logout",
+                "parameters": [
+                    {
+                        "description": "logout",
+                        "name": "logout",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/entities.LogoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authv1.LogoutResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
         "/auth/register": {
             "post": {
                 "description": "Register",
@@ -123,6 +169,14 @@ const docTemplate = `{
                 }
             }
         },
+        "authv1.LogoutResponse": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "authv1.RegisterResponse": {
             "type": "object",
             "properties": {
@@ -134,9 +188,7 @@ const docTemplate = `{
         "entities.LoginRequest": {
             "type": "object",
             "required": [
-                "email",
-                "password",
-                "username"
+                "password"
             ],
             "properties": {
                 "email": {
@@ -148,9 +200,18 @@ const docTemplate = `{
                     "minLength": 8
                 },
                 "username": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 3
+                    "type": "string"
+                }
+            }
+        },
+        "entities.LogoutRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
                 }
             }
         },

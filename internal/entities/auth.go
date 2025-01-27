@@ -29,3 +29,13 @@ func (r *LoginRequest) ToGRPC() *authv1.LoginRequest {
 		Password: r.Password,
 	}
 }
+
+type LogoutRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
+func (r *LogoutRequest) ToGRPC() *authv1.LogoutRequest {
+	return &authv1.LogoutRequest{
+		RefreshToken: r.RefreshToken,
+	}
+}

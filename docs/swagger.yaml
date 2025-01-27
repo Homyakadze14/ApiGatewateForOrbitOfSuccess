@@ -7,6 +7,11 @@ definitions:
       refresh_token:
         type: string
     type: object
+  authv1.LogoutResponse:
+    properties:
+      success:
+        type: boolean
+    type: object
   authv1.RegisterResponse:
     properties:
       success:
@@ -21,13 +26,16 @@ definitions:
         minLength: 8
         type: string
       username:
-        maxLength: 20
-        minLength: 3
         type: string
     required:
-    - email
     - password
-    - username
+    type: object
+  entities.LogoutRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
     type: object
   entities.RegisterRequest:
     properties:
@@ -83,6 +91,36 @@ paths:
         "503":
           description: Service Unavailable
       summary: Login
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout
+      operationId: Logout
+      parameters:
+      - description: logout
+        in: body
+        name: logout
+        schema:
+          $ref: '#/definitions/entities.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authv1.LogoutResponse'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Logout
       tags:
       - Auth
   /auth/register:
