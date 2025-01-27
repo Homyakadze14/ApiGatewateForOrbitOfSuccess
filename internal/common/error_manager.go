@@ -65,7 +65,7 @@ func GetProtoErrWithStatusCode(err error) (int, error) {
 			err = fmt.Errorf("Internal server error")
 		case codes.Unauthenticated:
 			code = http.StatusUnauthorized
-			err = fmt.Errorf("Unauthorized")
+			err = fmt.Errorf("Unauthorized: %s", st.Message())
 		default:
 			code = http.StatusInternalServerError
 			err = fmt.Errorf("Unexpected error: %s", st.Message())

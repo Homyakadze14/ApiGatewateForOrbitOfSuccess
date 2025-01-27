@@ -15,3 +15,17 @@ func (r *RegisterRequest) ToGRPC() *authv1.RegisterRequest {
 		Password: r.Password,
 	}
 }
+
+type LoginRequest struct {
+	Username string `json:"username,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Password string `json:"password" binding:"required,min=8,max=50"`
+}
+
+func (r *LoginRequest) ToGRPC() *authv1.LoginRequest {
+	return &authv1.LoginRequest{
+		Username: r.Username,
+		Email:    r.Email,
+		Password: r.Password,
+	}
+}
