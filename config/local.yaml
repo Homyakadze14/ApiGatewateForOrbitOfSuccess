@@ -1,4 +1,7 @@
 env: "local"  
 
 http:
-  port: 8000
+  port: 8080
+
+auth_service:
+  address: "localhost:5000"

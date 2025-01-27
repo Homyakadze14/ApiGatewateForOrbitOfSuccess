@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	_ "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/docs"
-	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/services"
 
+	authv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/auth"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -15,12 +15,12 @@ import (
 )
 
 // Swagger spec:
-// @title       TestSote
-// @description RestAPI for test site
+// @title       API Gatewate
+// @description API Gatewate for orbit of success services
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /api/v1
-func NewRouter(handler *gin.Engine, a *services.AuthService) {
+func NewRouter(handler *gin.Engine, a authv1.AuthClient) {
 	// Options
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())

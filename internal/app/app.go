@@ -14,7 +14,8 @@ import (
 )
 
 type HttpServer struct {
-	s *httpserver.Server
+	s     *httpserver.Server
+	authS *services.AuthService
 }
 
 func Run(
@@ -22,19 +23,30 @@ func Run(
 	cfg *config.Config,
 ) *HttpServer {
 	// Services
-	authService := services.NewAuthService()
+	authService := services.NewAuthService(log, cfg.AuthServiceCfg)
+
+	// Clients
+	authClient := authService.Connect()
 
 	// HTTP Server
 	handler := gin.New()
-	v1.NewRouter(handler, authService)
+	v1.NewRouter(handler, authClient)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 
-	return &HttpServer{s: httpServer}
+	return &HttpServer{
+		s:     httpServer,
+		authS: authService,
+	}
 }
 
 func (s *HttpServer) Shutdown() {
 	err := s.s.Shutdown()
 	if err != nil {
 		slog.Error(fmt.Errorf("app - Run - httpServer.Shutdown: %w", err).Error())
+	}
+
+	err = s.authS.CloseConn()
+	if err != nil {
+		slog.Error(fmt.Errorf("app - Run - httpServer.Shutdown - s.authS.CloseConn: %w", err).Error())
 	}
 }

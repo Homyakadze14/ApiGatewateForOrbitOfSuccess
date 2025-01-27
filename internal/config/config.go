@@ -8,9 +8,9 @@ import (
 )
 
 type Config struct {
-	Env            string         `yaml:"env" env-default:"local"`
-	Database       DatabaseConfig `yaml:"database"`
-	HTTP           HTTPConfig     `yaml:"http"`
+	Env            string            `yaml:"env" env-default:"local"`
+	HTTP           HTTPConfig        `yaml:"http"`
+	AuthServiceCfg AuthServiceConfig `yaml:"auth_service"`
 	MigrationsPath string
 }
 
@@ -18,9 +18,8 @@ type HTTPConfig struct {
 	Port string `yaml:"port" env-required:"true"`
 }
 
-type DatabaseConfig struct {
-	URL     string `yaml:"url" env-required:"true"`
-	PoolMax int    `yaml:"pool_max" env-required:"true"`
+type AuthServiceConfig struct {
+	Addr string `yaml:"address" env-required:"true"`
 }
 
 func MustLoad() *Config {
