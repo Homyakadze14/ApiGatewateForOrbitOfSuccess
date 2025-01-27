@@ -26,6 +26,7 @@ func NewAuthRoutes(log *slog.Logger, handler *gin.RouterGroup, s authv1.AuthClie
 		g.POST("/login", r.login)
 		g.POST("/logout", r.logout)
 		g.POST("/activate_account", r.activateAccount)
+		g.POST("/refresh", r.refresh)
 	}
 }
 
@@ -172,6 +173,45 @@ func (r *authRoutes) activateAccount(c *gin.Context) {
 	}
 
 	resp, err := r.s.ActivateAccount(c.Request.Context(), req.ToGRPC())
+	if err != nil {
+		code, err := common.GetProtoErrWithStatusCode(err)
+		log.Error(err.Error())
+		c.JSON(code, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary     Refresh token
+// @Description Refresh token
+// @ID          Refresh token
+// @Tags  	    Auth
+// @Accept      json
+// @Param 		refresh body entities.RefreshRequest false "refresh"
+// @Produce     json
+// @Success     200 {object} authv1.RefreshResponse
+// @Failure     400
+// @Failure     401
+// @Failure     404
+// @Failure     500
+// @Failure     503
+// @Router      /auth/refresh [post]
+func (r *authRoutes) refresh(c *gin.Context) {
+	const op = "authRoutes.activateArefreshccount"
+
+	log := r.log.With(
+		slog.String("op", op),
+	)
+
+	var req *entities.RefreshRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": common.GetErrMessages(err).Error()})
+		return
+	}
+
+	resp, err := r.s.Refresh(c.Request.Context(), req.ToGRPC())
 	if err != nil {
 		code, err := common.GetProtoErrWithStatusCode(err)
 		log.Error(err.Error())

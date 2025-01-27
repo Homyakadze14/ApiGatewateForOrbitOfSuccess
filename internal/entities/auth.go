@@ -49,3 +49,13 @@ func (r *ActivateAccountRequest) ToGRPC() *authv1.ActivateAccountRequest {
 		Link: r.Link,
 	}
 }
+
+type RefreshRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
+func (r *RefreshRequest) ToGRPC() *authv1.RefreshRequest {
+	return &authv1.RefreshRequest{
+		RefreshToken: r.RefreshToken,
+	}
+}

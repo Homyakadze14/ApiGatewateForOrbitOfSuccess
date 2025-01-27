@@ -156,6 +156,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/refresh": {
+            "post": {
+                "description": "Refresh token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh token",
+                "operationId": "Refresh token",
+                "parameters": [
+                    {
+                        "description": "refresh",
+                        "name": "refresh",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/entities.RefreshRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authv1.RefreshResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
         "/auth/register": {
             "post": {
                 "description": "Register",
@@ -231,6 +280,17 @@ const docTemplate = `{
                 }
             }
         },
+        "authv1.RefreshResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
         "authv1.RegisterResponse": {
             "type": "object",
             "properties": {
@@ -270,6 +330,17 @@ const docTemplate = `{
             }
         },
         "entities.LogoutRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.RefreshRequest": {
             "type": "object",
             "required": [
                 "refresh_token"
