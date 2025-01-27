@@ -2,6 +2,7 @@
 package v1
 
 import (
+	"log/slog"
 	"net/http"
 
 	_ "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/docs"
@@ -20,7 +21,7 @@ import (
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /api/v1
-func NewRouter(handler *gin.Engine, a authv1.AuthClient) {
+func NewRouter(handler *gin.Engine, a authv1.AuthClient, log *slog.Logger) {
 	// Options
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
@@ -44,6 +45,6 @@ func NewRouter(handler *gin.Engine, a authv1.AuthClient) {
 	// Routers
 	g := handler.Group("/api/v1")
 	{
-		NewAuthRoutes(g, a)
+		NewAuthRoutes(log, g, a)
 	}
 }

@@ -30,7 +30,7 @@ func Run(
 
 	// HTTP Server
 	handler := gin.New()
-	v1.NewRouter(handler, authClient)
+	v1.NewRouter(handler, authClient, log)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 
 	return &HttpServer{
