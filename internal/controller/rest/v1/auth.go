@@ -25,6 +25,7 @@ func NewAuthRoutes(log *slog.Logger, handler *gin.RouterGroup, s authv1.AuthClie
 		g.POST("/register", r.register)
 		g.POST("/login", r.login)
 		g.POST("/logout", r.logout)
+		g.POST("/activate_account", r.activateAccount)
 	}
 }
 
@@ -133,6 +134,44 @@ func (r *authRoutes) logout(c *gin.Context) {
 	}
 
 	resp, err := r.s.Logout(c.Request.Context(), req.ToGRPC())
+	if err != nil {
+		code, err := common.GetProtoErrWithStatusCode(err)
+		log.Error(err.Error())
+		c.JSON(code, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary     Activate account
+// @Description Activate account
+// @ID          Activate account
+// @Tags  	    Auth
+// @Accept      json
+// @Param 		activate body entities.ActivateAccountRequest false "activate"
+// @Produce     json
+// @Success     200 {object} authv1.ActivateAccountResponse
+// @Failure     400
+// @Failure     404
+// @Failure     500
+// @Failure     503
+// @Router      /auth/activate_account [post]
+func (r *authRoutes) activateAccount(c *gin.Context) {
+	const op = "authRoutes.activateAccount"
+
+	log := r.log.With(
+		slog.String("op", op),
+	)
+
+	var req *entities.ActivateAccountRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": common.GetErrMessages(err).Error()})
+		return
+	}
+
+	resp, err := r.s.ActivateAccount(c.Request.Context(), req.ToGRPC())
 	if err != nil {
 		code, err := common.GetProtoErrWithStatusCode(err)
 		log.Error(err.Error())

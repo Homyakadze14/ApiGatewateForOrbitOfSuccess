@@ -39,3 +39,13 @@ func (r *LogoutRequest) ToGRPC() *authv1.LogoutRequest {
 		RefreshToken: r.RefreshToken,
 	}
 }
+
+type ActivateAccountRequest struct {
+	Link string `json:"link" binding:"required"`
+}
+
+func (r *ActivateAccountRequest) ToGRPC() *authv1.ActivateAccountRequest {
+	return &authv1.ActivateAccountRequest{
+		Link: r.Link,
+	}
+}

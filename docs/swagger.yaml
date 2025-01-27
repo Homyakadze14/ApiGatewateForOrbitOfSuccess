@@ -1,5 +1,10 @@
 basePath: /api/v1
 definitions:
+  authv1.ActivateAccountResponse:
+    properties:
+      success:
+        type: boolean
+    type: object
   authv1.LoginResponse:
     properties:
       access_token:
@@ -16,6 +21,13 @@ definitions:
     properties:
       success:
         type: boolean
+    type: object
+  entities.ActivateAccountRequest:
+    properties:
+      link:
+        type: string
+    required:
+    - link
     type: object
   entities.LoginRequest:
     properties:
@@ -61,6 +73,36 @@ info:
   title: API Gatewate
   version: "1.0"
 paths:
+  /auth/activate_account:
+    post:
+      consumes:
+      - application/json
+      description: Activate account
+      operationId: Activate account
+      parameters:
+      - description: activate
+        in: body
+        name: activate
+        schema:
+          $ref: '#/definitions/entities.ActivateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authv1.ActivateAccountResponse'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Activate account
+      tags:
+      - Auth
   /auth/login:
     post:
       consumes:

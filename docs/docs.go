@@ -15,6 +15,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/activate_account": {
+            "post": {
+                "description": "Activate account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Activate account",
+                "operationId": "Activate account",
+                "parameters": [
+                    {
+                        "description": "activate",
+                        "name": "activate",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/entities.ActivateAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authv1.ActivateAccountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Login",
@@ -158,6 +204,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "authv1.ActivateAccountResponse": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "authv1.LoginResponse": {
             "type": "object",
             "properties": {
@@ -182,6 +236,17 @@ const docTemplate = `{
             "properties": {
                 "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "entities.ActivateAccountRequest": {
+            "type": "object",
+            "required": [
+                "link"
+            ],
+            "properties": {
+                "link": {
+                    "type": "string"
                 }
             }
         },
