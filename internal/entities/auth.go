@@ -59,3 +59,13 @@ func (r *RefreshRequest) ToGRPC() *authv1.RefreshRequest {
 		RefreshToken: r.RefreshToken,
 	}
 }
+
+type SendPasswordLinkRequest struct {
+	Email string `json:"email" binding:"required,email"`
+}
+
+func (r *SendPasswordLinkRequest) ToGRPC() *authv1.SendPasswordLinkRequest {
+	return &authv1.SendPasswordLinkRequest{
+		Email: r.Email,
+	}
+}
