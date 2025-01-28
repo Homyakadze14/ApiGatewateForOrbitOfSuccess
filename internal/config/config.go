@@ -19,7 +19,7 @@ type HTTPConfig struct {
 }
 
 type AuthServiceConfig struct {
-	Addr string `yaml:"address" env-required:"true"`
+	Addr string `yaml:"address" env:"AUTH_ADDRESS" env-required:"true"`
 }
 
 func MustLoad() *Config {
