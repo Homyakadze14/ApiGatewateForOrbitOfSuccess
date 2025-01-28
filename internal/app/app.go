@@ -33,6 +33,8 @@ func Run(
 	v1.NewRouter(handler, authClient, log)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 
+	log.Info("api gatewate server started", slog.String("addr", cfg.HTTP.Port))
+
 	return &HttpServer{
 		s:     httpServer,
 		authS: authService,
