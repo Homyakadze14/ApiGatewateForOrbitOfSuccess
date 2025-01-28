@@ -69,3 +69,15 @@ func (r *SendPasswordLinkRequest) ToGRPC() *authv1.SendPasswordLinkRequest {
 		Email: r.Email,
 	}
 }
+
+type ChangePasswordRequest struct {
+	Link     string `json:"link" binding:"required"`
+	Password string `json:"password" binding:"required,min=8,max=50"`
+}
+
+func (r *ChangePasswordRequest) ToGRPC() *authv1.ChangePasswordRequest {
+	return &authv1.ChangePasswordRequest{
+		Password: r.Password,
+		Link:     r.Link,
+	}
+}

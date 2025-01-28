@@ -28,6 +28,7 @@ func NewAuthRoutes(log *slog.Logger, handler *gin.RouterGroup, s authv1.AuthClie
 		g.POST("/activate_account", r.activateAccount)
 		g.POST("/refresh", r.refresh)
 		g.POST("/send_password_link", r.sndPwdLink)
+		g.POST("/change_password", r.changePwd)
 	}
 }
 
@@ -252,6 +253,45 @@ func (r *authRoutes) sndPwdLink(c *gin.Context) {
 	}
 
 	resp, err := r.s.SendPasswordLink(c.Request.Context(), req.ToGRPC())
+	if err != nil {
+		code, err := common.GetProtoErrWithStatusCode(err)
+		log.Error(err.Error())
+		c.JSON(code, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary     Change password
+// @Description Change password
+// @ID          Change password
+// @Tags  	    Auth
+// @Accept      json
+// @Param 		password body entities.ChangePasswordRequest false "password"
+// @Produce     json
+// @Success     200 {object} authv1.ChangePasswordResponse
+// @Failure     400
+// @Failure     401
+// @Failure     404
+// @Failure     500
+// @Failure     503
+// @Router      /auth/change_password [post]
+func (r *authRoutes) changePwd(c *gin.Context) {
+	const op = "authRoutes.changePwd"
+
+	log := r.log.With(
+		slog.String("op", op),
+	)
+
+	var req *entities.ChangePasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": common.GetErrMessages(err).Error()})
+		return
+	}
+
+	resp, err := r.s.ChangePassword(c.Request.Context(), req.ToGRPC())
 	if err != nil {
 		code, err := common.GetProtoErrWithStatusCode(err)
 		log.Error(err.Error())
