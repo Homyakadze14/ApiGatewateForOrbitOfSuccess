@@ -3,6 +3,7 @@ package v1
 import (
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/common"
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/entities"
@@ -23,6 +24,7 @@ func NewUserRoutes(log *slog.Logger, handler *gin.RouterGroup, s userv1.UserClie
 	g := handler.Group("/user")
 	{
 		g.PUT("", r.update)
+		g.GET("/:id", r.get)
 	}
 }
 
@@ -54,6 +56,49 @@ func (r *userRoutes) update(c *gin.Context) {
 	}
 
 	resp, err := r.s.UpdateInfo(c.Request.Context(), req.ToGRPC())
+	if err != nil {
+		code, err := common.GetProtoErrWithStatusCode(err)
+		log.Error(err.Error())
+		c.JSON(code, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary     Get user info
+// @Description Get user info
+// @ID          Get user info
+// @Tags  	    User
+// @Accept      json
+// @Produce     json
+// @Success     200 {object} userv1.GetInfoResponse
+// @Failure     400
+// @Failure     404
+// @Failure     500
+// @Failure     503
+// @Router      /user/{id} [get]
+func (r *userRoutes) get(c *gin.Context) {
+	const op = "userRoutes.get"
+	log := r.log.With(
+		slog.String("op", op),
+	)
+
+	urlParam, ok := c.Params.Get("id")
+	if !ok {
+		log.Error("bad url")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "bad url"})
+		return
+	}
+
+	userID, err := strconv.Atoi(urlParam)
+	if err != nil {
+		slog.Error("bad type")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "bad type"})
+		return
+	}
+
+	resp, err := r.s.GetInfo(c.Request.Context(), &userv1.GetInfoRequest{UserId: int64(userID)})
 	if err != nil {
 		code, err := common.GetProtoErrWithStatusCode(err)
 		log.Error(err.Error())

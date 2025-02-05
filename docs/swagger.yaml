@@ -134,6 +134,21 @@ definitions:
     - phone
     - user_id
     type: object
+  userv1.GetInfoResponse:
+    properties:
+      firstname:
+        type: string
+      gender:
+        type: string
+      icon_url:
+        type: string
+      lastname:
+        type: string
+      middlename:
+        type: string
+      phone:
+        type: string
+    type: object
   userv1.UpdateInfoResponse:
     properties:
       success:
@@ -392,6 +407,30 @@ paths:
         "503":
           description: Service Unavailable
       summary: Update user info
+      tags:
+      - User
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user info
+      operationId: Get user info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userv1.GetInfoResponse'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Get user info
       tags:
       - User
 swagger: "2.0"
