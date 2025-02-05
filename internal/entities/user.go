@@ -9,7 +9,7 @@ type UserUpdateRequest struct {
 	Lastname   string `json:"lastname" binding:"required"`
 	Gender     string `json:"gender" binding:"required"`
 	Phone      string `json:"phone" binding:"required"`
-	IconURL    string `json:"icon_url" binding:"required"`
+	IconURL    string `json:"icon_url"`
 }
 
 func (r *UserUpdateRequest) ToGRPC() *userv1.UpdateInfoRequest {

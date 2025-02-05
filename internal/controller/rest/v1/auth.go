@@ -18,7 +18,8 @@ type authRoutes struct {
 func NewAuthRoutes(log *slog.Logger, handler *gin.RouterGroup, s authv1.AuthClient) {
 	r := &authRoutes{
 		log: log,
-		s:   s}
+		s:   s,
+	}
 
 	g := handler.Group("/auth")
 	{

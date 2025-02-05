@@ -21,7 +21,9 @@ type userRoutes struct {
 func NewUserRoutes(log *slog.Logger, handler *gin.RouterGroup, s userv1.UserClient, a authv1.AuthClient) {
 	r := &userRoutes{
 		log: log,
-		s:   s}
+		s:   s,
+		a:   a,
+	}
 
 	ga := handler.Group("/user")
 	{
