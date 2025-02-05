@@ -24,13 +24,17 @@ func Run(
 ) *HttpServer {
 	// Services
 	authService := services.NewAuthService(log, cfg.AuthServiceCfg)
+	userService := services.NewUserService(log, cfg.UserServiceCfg)
 
 	// Clients
-	authClient := authService.Connect()
+	clients := v1.Clients{
+		Auth: authService.Connect(),
+		User: userService.Connect(),
+	}
 
 	// HTTP Server
 	handler := gin.New()
-	v1.NewRouter(handler, authClient, log)
+	v1.NewRouter(handler, clients, log)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 
 	log.Info("api gatewate server started", slog.String("addr", cfg.HTTP.Port))

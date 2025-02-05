@@ -109,6 +109,36 @@ definitions:
     required:
     - email
     type: object
+  entities.UserUpdateRequest:
+    properties:
+      firstname:
+        type: string
+      gender:
+        type: string
+      icon_url:
+        type: string
+      lastname:
+        type: string
+      middlename:
+        type: string
+      phone:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - firstname
+    - gender
+    - icon_url
+    - lastname
+    - middlename
+    - phone
+    - user_id
+    type: object
+  userv1.UpdateInfoResponse:
+    properties:
+      success:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -334,4 +364,34 @@ paths:
       summary: Send password link
       tags:
       - Auth
+  /user:
+    put:
+      consumes:
+      - application/json
+      description: Update user info
+      operationId: Update user info
+      parameters:
+      - description: info
+        in: body
+        name: info
+        schema:
+          $ref: '#/definitions/entities.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userv1.UpdateInfoResponse'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Update user info
+      tags:
+      - User
 swagger: "2.0"

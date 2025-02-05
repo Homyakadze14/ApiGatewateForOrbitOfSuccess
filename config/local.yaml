@@ -5,3 +5,6 @@ http:
 
 auth_service:
   address: "localhost:5000"
+
+user_service:
+  address: "localhost:5001"

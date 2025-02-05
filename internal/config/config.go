@@ -11,6 +11,7 @@ type Config struct {
 	Env            string            `yaml:"env" env-default:"local"`
 	HTTP           HTTPConfig        `yaml:"http"`
 	AuthServiceCfg AuthServiceConfig `yaml:"auth_service"`
+	UserServiceCfg UserServiceConfig `yaml:"user_service"`
 	MigrationsPath string
 }
 
@@ -20,6 +21,17 @@ type HTTPConfig struct {
 
 type AuthServiceConfig struct {
 	Addr string `yaml:"address" env:"AUTH_ADDRESS" env-required:"true"`
+}
+
+type UserServiceConfig struct {
+	Addr string `yaml:"address" env:"USER_ADDRESS" env-required:"true"`
+}
+
+type S3 struct {
+	ACCESS_KEY        string `env-required:"true" yaml:"access_key"`
+	SECRET_ACCESS_KEY string `env-required:"true" yaml:"secret_access_key"`
+	BUCKET_NAME       string `env-required:"true" yaml:"bucket_name"`
+	ENDPOINT          string `env-required:"true" yaml:"endpoint"`
 }
 
 func MustLoad() *Config {

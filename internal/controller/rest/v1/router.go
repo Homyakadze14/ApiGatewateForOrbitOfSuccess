@@ -8,6 +8,7 @@ import (
 	_ "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/docs"
 
 	authv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/auth"
+	userv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -15,13 +16,18 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+type Clients struct {
+	Auth authv1.AuthClient
+	User userv1.UserClient
+}
+
 // Swagger spec:
 // @title       API Gatewate
 // @description API Gatewate for orbit of success services
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /api/v1
-func NewRouter(handler *gin.Engine, a authv1.AuthClient, log *slog.Logger) {
+func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger) {
 	// Options
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
@@ -45,6 +51,7 @@ func NewRouter(handler *gin.Engine, a authv1.AuthClient, log *slog.Logger) {
 	// Routers
 	g := handler.Group("/api/v1")
 	{
-		NewAuthRoutes(log, g, a)
+		NewAuthRoutes(log, g, c.Auth)
+		NewUserRoutes(log, g, c.User)
 	}
 }

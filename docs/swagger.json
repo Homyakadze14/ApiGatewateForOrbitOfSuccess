@@ -342,6 +342,52 @@
                     }
                 }
             }
+        },
+        "/user": {
+            "put": {
+                "description": "Update user info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user info",
+                "operationId": "Update user info",
+                "parameters": [
+                    {
+                        "description": "info",
+                        "name": "info",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/entities.UserUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/userv1.UpdateInfoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -507,6 +553,49 @@
             "properties": {
                 "email": {
                     "type": "string"
+                }
+            }
+        },
+        "entities.UserUpdateRequest": {
+            "type": "object",
+            "required": [
+                "firstname",
+                "gender",
+                "icon_url",
+                "lastname",
+                "middlename",
+                "phone",
+                "user_id"
+            ],
+            "properties": {
+                "firstname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "icon_url": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "middlename": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "userv1.UpdateInfoResponse": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
                 }
             }
         }
