@@ -7,23 +7,30 @@ import (
 
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/common"
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/entities"
+	authv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/auth"
 	userv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/user"
 	"github.com/gin-gonic/gin"
 )
 
 type userRoutes struct {
 	s   userv1.UserClient
+	a   authv1.AuthClient
 	log *slog.Logger
 }
 
-func NewUserRoutes(log *slog.Logger, handler *gin.RouterGroup, s userv1.UserClient) {
+func NewUserRoutes(log *slog.Logger, handler *gin.RouterGroup, s userv1.UserClient, a authv1.AuthClient) {
 	r := &userRoutes{
 		log: log,
 		s:   s}
 
+	ga := handler.Group("/user")
+	{
+		ga.Use(authMiddleware(log, a))
+		ga.PUT("/:id", r.update)
+	}
+
 	g := handler.Group("/user")
 	{
-		g.PUT("", r.update)
 		g.GET("/:id", r.get)
 	}
 }
@@ -40,7 +47,7 @@ func NewUserRoutes(log *slog.Logger, handler *gin.RouterGroup, s userv1.UserClie
 // @Failure     404
 // @Failure     500
 // @Failure     503
-// @Router      /user [put]
+// @Router      /user/{id} [put]
 func (r *userRoutes) update(c *gin.Context) {
 	const op = "userRoutes.update"
 
@@ -48,12 +55,28 @@ func (r *userRoutes) update(c *gin.Context) {
 		slog.String("op", op),
 	)
 
+	urlParam, ok := c.Params.Get("id")
+	if !ok {
+		log.Error("bad url")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "bad url"})
+		return
+	}
+
+	userID, err := strconv.Atoi(urlParam)
+	if err != nil {
+		slog.Error("bad type")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "bad type"})
+		return
+	}
+
 	var req *entities.UserUpdateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": common.GetErrMessages(err).Error()})
 		return
 	}
+
+	req.UserID = userID
 
 	resp, err := r.s.UpdateInfo(c.Request.Context(), req.ToGRPC())
 	if err != nil {

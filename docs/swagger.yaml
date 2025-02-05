@@ -123,8 +123,6 @@ definitions:
         type: string
       phone:
         type: string
-      user_id:
-        type: integer
     required:
     - firstname
     - gender
@@ -132,7 +130,6 @@ definitions:
     - lastname
     - middlename
     - phone
-    - user_id
     type: object
   userv1.GetInfoResponse:
     properties:
@@ -379,7 +376,30 @@ paths:
       summary: Send password link
       tags:
       - Auth
-  /user:
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user info
+      operationId: Get user info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userv1.GetInfoResponse'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Get user info
+      tags:
+      - User
     put:
       consumes:
       - application/json
@@ -407,30 +427,6 @@ paths:
         "503":
           description: Service Unavailable
       summary: Update user info
-      tags:
-      - User
-  /user/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get user info
-      operationId: Get user info
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/userv1.GetInfoResponse'
-        "400":
-          description: Bad Request
-        "404":
-          description: Not Found
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      summary: Get user info
       tags:
       - User
 swagger: "2.0"

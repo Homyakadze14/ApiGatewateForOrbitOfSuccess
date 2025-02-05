@@ -3,7 +3,7 @@ package entities
 import userv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/user"
 
 type UserUpdateRequest struct {
-	UserID     int    `json:"user_id" binding:"required"`
+	UserID     int    `json:"-"`
 	Firstname  string `json:"firstname" binding:"required"`
 	Middlename string `json:"middlename" binding:"required"`
 	Lastname   string `json:"lastname" binding:"required"`

@@ -52,6 +52,6 @@ func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger) {
 	g := handler.Group("/api/v1")
 	{
 		NewAuthRoutes(log, g, c.Auth)
-		NewUserRoutes(log, g, c.User)
+		NewUserRoutes(log, g, c.User, c.Auth)
 	}
 }
