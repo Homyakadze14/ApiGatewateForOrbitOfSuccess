@@ -349,6 +349,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/media/upload": {
+            "post": {
+                "description": "Upload media",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "media"
+                ],
+                "summary": "Upload media",
+                "operationId": "Upload media",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Files",
+                        "name": "media",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
         "/user/{id}": {
             "get": {
                 "description": "Get user info",
@@ -601,7 +636,6 @@ const docTemplate = `{
             "required": [
                 "firstname",
                 "gender",
-                "icon_url",
                 "lastname",
                 "middlename",
                 "phone"

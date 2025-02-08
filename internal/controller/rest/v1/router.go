@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	_ "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/docs"
+	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/lib/s3"
 
 	authv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/auth"
 	userv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/user"
@@ -27,7 +28,7 @@ type Clients struct {
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /api/v1
-func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger) {
+func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger, s3 *s3.S3Storage) {
 	// Options
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
@@ -53,5 +54,6 @@ func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger) {
 	{
 		NewAuthRoutes(log, g, c.Auth)
 		NewUserRoutes(log, g, c.User, c.Auth)
+		NewMediaRoutes(log, g, s3)
 	}
 }

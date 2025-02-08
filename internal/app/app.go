@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	v1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/controller/rest/v1"
+	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/lib/s3"
 
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/config"
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/services"
@@ -32,9 +33,12 @@ func Run(
 		User: userService.Connect(),
 	}
 
+	// S3
+	s3Storage := s3.NewS3Storage(log, cfg.S3)
+
 	// HTTP Server
 	handler := gin.New()
-	v1.NewRouter(handler, clients, log)
+	v1.NewRouter(handler, clients, log, s3Storage)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 
 	log.Info("api gatewate server started", slog.String("addr", cfg.HTTP.Port))

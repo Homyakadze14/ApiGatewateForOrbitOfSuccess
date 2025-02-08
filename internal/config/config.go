@@ -12,6 +12,7 @@ type Config struct {
 	HTTP           HTTPConfig        `yaml:"http"`
 	AuthServiceCfg AuthServiceConfig `yaml:"auth_service"`
 	UserServiceCfg UserServiceConfig `yaml:"user_service"`
+	S3             S3                `yaml:"s3"`
 	MigrationsPath string
 }
 

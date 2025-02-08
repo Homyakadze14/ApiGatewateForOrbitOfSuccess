@@ -8,3 +8,9 @@ auth_service:
 
 user_service:
   address: "localhost:5001"
+
+s3:
+  access_key: ""
+  secret_access_key: ""
+  bucket_name: ""
+  endpoint: ""

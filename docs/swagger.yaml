@@ -126,7 +126,6 @@ definitions:
     required:
     - firstname
     - gender
-    - icon_url
     - lastname
     - middlename
     - phone
@@ -376,6 +375,29 @@ paths:
       summary: Send password link
       tags:
       - Auth
+  /media/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload media
+      operationId: Upload media
+      parameters:
+      - description: Files
+        in: formData
+        name: media
+        type: file
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      summary: Upload media
+      tags:
+      - media
   /user/{id}:
     get:
       consumes:
