@@ -20,7 +20,7 @@ const (
 var (
 	ErrHudgeFiles       = errors.New("hudge files")
 	ErrWrongContentType = errors.New("content type must be multipart/form-data")
-	ErrNoFiles          = errors.New("you must send at least one file.")
+	ErrNoFiles          = errors.New("you must send at least one file")
 )
 
 type mediaRoutes struct {

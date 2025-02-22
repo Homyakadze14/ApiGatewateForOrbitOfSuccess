@@ -26,7 +26,8 @@ type Clients struct {
 // @title       API Gatewate
 // @description API Gatewate for orbit of success services
 // @version     1.0
-// @host        localhost:8080
+// @schemes 	https
+// @host        cookhub.space
 // @BasePath    /api/v1
 func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger, s3 *s3.S3Storage) {
 	// Options

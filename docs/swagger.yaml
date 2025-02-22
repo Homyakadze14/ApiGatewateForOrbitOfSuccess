@@ -150,7 +150,7 @@ definitions:
       success:
         type: boolean
     type: object
-host: localhost:8080
+host: cookhub.space
 info:
   contact: {}
   description: API Gatewate for orbit of success services
@@ -451,4 +451,6 @@ paths:
       summary: Update user info
       tags:
       - User
+schemes:
+- https
 swagger: "2.0"

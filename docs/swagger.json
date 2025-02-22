@@ -1,4 +1,7 @@
 {
+    "schemes": [
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "API Gatewate for orbit of success services",
@@ -6,7 +9,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "cookhub.space",
     "basePath": "/api/v1",
     "paths": {
         "/auth/activate_account": {
