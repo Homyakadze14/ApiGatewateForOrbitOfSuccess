@@ -58,6 +58,13 @@ definitions:
     - link
     - password
     type: object
+  entities.FileResp:
+    properties:
+      filename:
+        type: string
+      url:
+        type: string
+    type: object
   entities.LoginRequest:
     properties:
       email:
@@ -111,9 +118,9 @@ definitions:
     type: object
   entities.UploadResponse:
     properties:
-      urls:
+      files:
         items:
-          type: string
+          $ref: '#/definitions/entities.FileResp'
         type: array
     type: object
   entities.UserUpdateRequest:

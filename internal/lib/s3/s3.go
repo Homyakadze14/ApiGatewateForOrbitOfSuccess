@@ -2,10 +2,10 @@ package s3
 
 import (
 	"fmt"
-	"io"
 	"log/slog"
 
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/config"
+	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/entities"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -45,10 +45,10 @@ func NewS3Storage(l *slog.Logger, cfg config.S3) *S3Storage {
 	return &S3Storage{s3Client, &cfg.BUCKET_NAME, l}
 }
 
-func (s *S3Storage) saveToS3(urlCh chan<- string, errCh chan<- error, photo io.ReadSeeker) {
+func (s *S3Storage) saveToS3(flsCh chan<- entities.FileResp, errCh chan<- error, file entities.File) {
 	uid := uuid.New().String()
 	_, err := s.PutObject(&s3.PutObjectInput{
-		Body:   photo,
+		Body:   file.File,
 		Bucket: s.bucket,
 		Key:    aws.String(uid),
 	})
@@ -57,30 +57,35 @@ func (s *S3Storage) saveToS3(urlCh chan<- string, errCh chan<- error, photo io.R
 		errCh <- err
 	}
 
-	urlCh <- fmt.Sprintf("%s/%s/%s", s.Endpoint, *s.bucket, uid)
+	resp := entities.FileResp{
+		Filename: file.Filename,
+		URL:      fmt.Sprintf("%s/%s/%s", s.Endpoint, *s.bucket, uid),
+	}
+
+	flsCh <- resp
 }
 
-func (s *S3Storage) Save(files []io.ReadSeeker) ([]string, error) {
-	urls := make([]string, len(files))
+func (s *S3Storage) Save(files []entities.File) ([]entities.FileResp, error) {
+	resp := make([]entities.FileResp, 0, len(files))
 
-	urlChan := make(chan string)
+	flsChan := make(chan entities.FileResp)
 	errChan := make(chan error)
 
-	defer close(urlChan)
+	defer close(flsChan)
 	defer close(errChan)
 
 	for _, file := range files {
-		go s.saveToS3(urlChan, errChan, file)
+		go s.saveToS3(flsChan, errChan, file)
 	}
 
 	for i := 0; i < len(files); i++ {
 		select {
-		case url := <-urlChan:
-			urls = append(urls, url)
+		case url := <-flsChan:
+			resp = append(resp, url)
 		case err := <-errChan:
 			return nil, err
 		}
 	}
 
-	return urls, nil
+	return resp, nil
 }

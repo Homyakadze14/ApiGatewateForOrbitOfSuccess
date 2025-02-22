@@ -2,7 +2,6 @@ package v1
 
 import (
 	"errors"
-	"io"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -40,7 +39,7 @@ func NewMediaRoutes(log *slog.Logger, handler *gin.RouterGroup, s3 *s3.S3Storage
 	}
 }
 
-func (r *mediaRoutes) getFiles(c *gin.Context) ([]io.ReadSeeker, error) {
+func (r *mediaRoutes) getFiles(c *gin.Context) ([]entities.File, error) {
 	err := c.Request.ParseMultipartForm(maxFilesSize)
 	if err != nil {
 		return nil, ErrHudgeFiles
@@ -56,13 +55,19 @@ func (r *mediaRoutes) getFiles(c *gin.Context) ([]io.ReadSeeker, error) {
 		return nil, ErrNoFiles
 	}
 
-	files := make([]io.ReadSeeker, 0, photosArrLenght)
+	files := make([]entities.File, 0, photosArrLenght)
 	for _, fileHeader := range arr {
-		file, err := fileHeader.Open()
+		file := entities.File{
+			Filename: fileHeader.Filename,
+		}
+
+		f, err := fileHeader.Open()
 		if err != nil {
 			return nil, err
 		}
-		defer file.Close()
+		defer f.Close()
+
+		file.File = f
 		files = append(files, file)
 	}
 
@@ -104,12 +109,12 @@ func (r *mediaRoutes) upload(c *gin.Context) {
 		return
 	}
 
-	urls, err := r.s3.Save(files)
+	fls, err := r.s3.Save(files)
 	if err != nil {
 		slog.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
 		return
 	}
 
-	c.JSON(http.StatusOK, entities.UploadResponse{Urls: urls})
+	c.JSON(http.StatusOK, entities.UploadResponse{Files: fls})
 }

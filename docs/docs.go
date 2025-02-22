@@ -566,6 +566,17 @@ const docTemplate = `{
                 }
             }
         },
+        "entities.FileResp": {
+            "type": "object",
+            "properties": {
+                "filename": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "entities.LoginRequest": {
             "type": "object",
             "required": [
@@ -644,10 +655,10 @@ const docTemplate = `{
         "entities.UploadResponse": {
             "type": "object",
             "properties": {
-                "urls": {
+                "files": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/entities.FileResp"
                     }
                 }
             }
