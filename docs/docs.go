@@ -365,9 +365,13 @@ const docTemplate = `{
                 "operationId": "Upload media",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "Files",
-                        "name": "media",
+                        "type": "array",
+                        "items": {
+                            "type": "file"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "files",
+                        "name": "files",
                         "in": "formData"
                     }
                 ],

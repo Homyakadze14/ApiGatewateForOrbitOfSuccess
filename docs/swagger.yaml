@@ -382,10 +382,13 @@ paths:
       description: Upload media
       operationId: Upload media
       parameters:
-      - description: Files
+      - collectionFormat: csv
+        description: files
         in: formData
-        name: media
-        type: file
+        items:
+          type: file
+        name: files
+        type: array
       produces:
       - application/json
       responses:
