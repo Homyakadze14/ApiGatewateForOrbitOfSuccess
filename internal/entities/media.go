@@ -1,5 +1,5 @@
 package entities
 
 type UploadResponse struct {
-	Urls string
+	Urls []string
 }

@@ -76,6 +76,7 @@ func (r *mediaRoutes) getFiles(c *gin.Context) ([]io.ReadSeeker, error) {
 // @Param 		files formData []file false "files"
 // @Accept      mpfd
 // @Produce     json
+// @Success     200 {object} entities.UploadResponse
 // @Failure     400
 // @Failure     500
 // @Failure     503

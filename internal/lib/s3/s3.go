@@ -57,11 +57,11 @@ func (s *S3Storage) saveToS3(urlCh chan<- string, errCh chan<- error, photo io.R
 		errCh <- err
 	}
 
-	urlCh <- fmt.Sprintf("%s/%s/%s", s.Endpoint, *s.bucket, uid) + ";"
+	urlCh <- fmt.Sprintf("%s/%s/%s", s.Endpoint, *s.bucket, uid)
 }
 
-func (s *S3Storage) Save(files []io.ReadSeeker) (string, error) {
-	urls := ""
+func (s *S3Storage) Save(files []io.ReadSeeker) ([]string, error) {
+	urls := make([]string, len(files))
 
 	urlChan := make(chan string)
 	errChan := make(chan error)
@@ -76,9 +76,9 @@ func (s *S3Storage) Save(files []io.ReadSeeker) (string, error) {
 	for i := 0; i < len(files); i++ {
 		select {
 		case url := <-urlChan:
-			urls += url
+			urls = append(urls, url)
 		case err := <-errChan:
-			return "", err
+			return nil, err
 		}
 	}
 

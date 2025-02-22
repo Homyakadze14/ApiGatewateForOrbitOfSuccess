@@ -109,6 +109,13 @@ definitions:
     required:
     - email
     type: object
+  entities.UploadResponse:
+    properties:
+      urls:
+        items:
+          type: string
+        type: array
+    type: object
   entities.UserUpdateRequest:
     properties:
       firstname:
@@ -392,6 +399,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.UploadResponse'
         "400":
           description: Bad Request
         "500":
