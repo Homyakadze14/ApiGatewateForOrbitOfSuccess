@@ -29,6 +29,9 @@ type Clients struct {
 // @schemes 	https
 // @host        cookhub.space
 // @BasePath    /api/v1
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger, s3 *s3.S3Storage) {
 	// Options
 	handler.Use(gin.Logger())

@@ -40,12 +40,14 @@ func NewUserRoutes(log *slog.Logger, handler *gin.RouterGroup, s userv1.UserClie
 // @Summary     Update user info
 // @Description Update user info
 // @ID          Update user info
+// @Security ApiKeyAuth
 // @Tags  	    User
 // @Accept      json
 // @Param 		info body entities.UserUpdateRequest false "info"
 // @Produce     json
 // @Success     200 {object} userv1.UpdateInfoResponse
 // @Failure     400
+// @Failure     401
 // @Failure     404
 // @Failure     500
 // @Failure     503

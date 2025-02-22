@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/common"
@@ -13,15 +14,23 @@ import (
 
 func authMiddleware(log *slog.Logger, s authv1.AuthClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("Authorization")
+		authH := c.GetHeader("Authorization")
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer cancel()
 
+		if !strings.Contains(authH, "Bearer ") {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "bad token"})
+			return
+		}
+
+		token := strings.Split(authH, "Bearer ")[1]
+		slog.Info(token)
+
 		_, err := s.Verify(ctx, &authv1.VerifyRequest{AccessToken: token})
 		if err != nil {
-			_, err := common.GetProtoErrWithStatusCode(err)
+			status, err := common.GetProtoErrWithStatusCode(err)
 			log.Error(err.Error())
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			c.AbortWithStatusJSON(status, gin.H{"error": err.Error()})
 			return
 		}
 

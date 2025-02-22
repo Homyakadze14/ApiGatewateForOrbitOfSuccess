@@ -463,15 +463,24 @@ paths:
             $ref: '#/definitions/userv1.UpdateInfoResponse'
         "400":
           description: Bad Request
+        "401":
+          description: Unauthorized
         "404":
           description: Not Found
         "500":
           description: Internal Server Error
         "503":
           description: Service Unavailable
+      security:
+      - ApiKeyAuth: []
       summary: Update user info
       tags:
       - User
 schemes:
 - https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
