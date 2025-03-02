@@ -40,6 +40,7 @@ func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger, s3 *s3.S3Storag
 	// Set cors
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowOrigins = []string{"http://localhost:5173", "http://147.45.235.14:5173"}
+	corsConf.AllowHeaders = []string{"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"}
 	corsConf.AllowCredentials = true
 	handler.Use(cors.New(corsConf))
 
