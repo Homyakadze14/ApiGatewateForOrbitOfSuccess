@@ -8,12 +8,13 @@ import (
 )
 
 type Config struct {
-	Env            string            `yaml:"env" env-default:"local"`
-	HTTP           HTTPConfig        `yaml:"http"`
-	AuthServiceCfg AuthServiceConfig `yaml:"auth_service"`
-	UserServiceCfg UserServiceConfig `yaml:"user_service"`
-	S3             S3                `yaml:"s3"`
-	MigrationsPath string
+	Env              string              `yaml:"env" env-default:"local"`
+	HTTP             HTTPConfig          `yaml:"http"`
+	AuthServiceCfg   AuthServiceConfig   `yaml:"auth_service"`
+	UserServiceCfg   UserServiceConfig   `yaml:"user_service"`
+	CourseServiceCfg CourseServiceConfig `yaml:"course_service"`
+	S3               S3                  `yaml:"s3"`
+	MigrationsPath   string
 }
 
 type HTTPConfig struct {
@@ -25,6 +26,10 @@ type AuthServiceConfig struct {
 }
 
 type UserServiceConfig struct {
+	Addr string `yaml:"address" env:"USER_ADDRESS" env-required:"true"`
+}
+
+type CourseServiceConfig struct {
 	Addr string `yaml:"address" env:"USER_ADDRESS" env-required:"true"`
 }
 

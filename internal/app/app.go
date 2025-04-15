@@ -15,8 +15,10 @@ import (
 )
 
 type HttpServer struct {
-	s     *httpserver.Server
-	authS *services.AuthService
+	s       *httpserver.Server
+	authS   *services.AuthService
+	userS   *services.UserService
+	courseS *services.CourseService
 }
 
 func Run(
@@ -26,11 +28,13 @@ func Run(
 	// Services
 	authService := services.NewAuthService(log, cfg.AuthServiceCfg)
 	userService := services.NewUserService(log, cfg.UserServiceCfg)
+	courseService := services.NewCourseService(log, cfg.CourseServiceCfg)
 
 	// Clients
 	clients := v1.Clients{
-		Auth: authService.Connect(),
-		User: userService.Connect(),
+		Auth:   authService.Connect(),
+		User:   userService.Connect(),
+		Course: courseService.Connect(),
 	}
 
 	// S3
@@ -44,8 +48,10 @@ func Run(
 	log.Info("api gatewate server started", slog.String("addr", cfg.HTTP.Port))
 
 	return &HttpServer{
-		s:     httpServer,
-		authS: authService,
+		s:       httpServer,
+		authS:   authService,
+		userS:   userService,
+		courseS: courseService,
 	}
 }
 
@@ -58,5 +64,15 @@ func (s *HttpServer) Shutdown() {
 	err = s.authS.CloseConn()
 	if err != nil {
 		slog.Error(fmt.Errorf("app - Run - httpServer.Shutdown - s.authS.CloseConn: %w", err).Error())
+	}
+
+	err = s.userS.CloseConn()
+	if err != nil {
+		slog.Error(fmt.Errorf("app - Run - httpServer.Shutdown - s.userS.CloseConn: %w", err).Error())
+	}
+
+	err = s.courseS.CloseConn()
+	if err != nil {
+		slog.Error(fmt.Errorf("app - Run - httpServer.Shutdown - s.courseS.CloseConn: %w", err).Error())
 	}
 }

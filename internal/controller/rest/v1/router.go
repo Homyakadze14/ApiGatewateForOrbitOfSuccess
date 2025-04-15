@@ -9,6 +9,7 @@ import (
 	"github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/internal/lib/s3"
 
 	authv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/auth"
+	coursev1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/course"
 	userv1 "github.com/Homyakadze14/ApiGatewateForOrbitOfSuccess/proto/gen/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -18,8 +19,9 @@ import (
 )
 
 type Clients struct {
-	Auth authv1.AuthClient
-	User userv1.UserClient
+	Auth   authv1.AuthClient
+	User   userv1.UserClient
+	Course coursev1.CourseServiceClient
 }
 
 // Swagger spec:
@@ -60,5 +62,6 @@ func NewRouter(handler *gin.Engine, c Clients, log *slog.Logger, s3 *s3.S3Storag
 		NewAuthRoutes(log, g, c.Auth)
 		NewUserRoutes(log, g, c.User, c.Auth)
 		NewMediaRoutes(log, g, s3)
+		NewCourseRoutes(log, g, c.Course)
 	}
 }
