@@ -30,7 +30,7 @@ type UserServiceConfig struct {
 }
 
 type CourseServiceConfig struct {
-	Addr string `yaml:"address" env:"USER_ADDRESS" env-required:"true"`
+	Addr string `yaml:"address" env:"COURSE_ADDRESS" env-required:"true"`
 }
 
 type S3 struct {
